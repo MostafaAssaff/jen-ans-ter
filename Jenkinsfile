@@ -43,9 +43,9 @@ pipeline {
                         usernameVariable: 'AWS_ACCESS_KEY_ID',
                         passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                             sh '''
-                                export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-                                export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-                                terraform apply -auto-approve
+                                terraform apply -auto-approve \
+                                  -var "aws_access_key=$AWS_ACCESS_KEY_ID" \
+                                  -var "aws_secret_key=$AWS_SECRET_ACCESS_KEY"
                             '''
                     }
                 }
@@ -59,7 +59,7 @@ pipeline {
                         keyFileVariable: 'SSH_KEY',
                         usernameVariable: 'SSH_USER')]) {
                         sh '''
-                            EC2_IP=$(terraform -chdir=../terraform output -raw public_ip)
+                            EC2_IP=$(terraform -chdir=../Terraform output -raw public_ip)
                             echo "$EC2_IP ansible_user=$SSH_USER ansible_ssh_private_key_file=$SSH_KEY" > inventory
                             ansible-playbook -i inventory playbook.yml
                         '''
