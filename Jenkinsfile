@@ -61,7 +61,7 @@ pipeline {
                         sh '''
                             EC2_IP=$(terraform -chdir=../Terraform output -raw public_ip)
                             echo "$EC2_IP ansible_user=$SSH_USER ansible_ssh_private_key_file=$SSH_KEY" > inventory
-                            ansible-playbook -i inventory playbook.yml
+                            ansible-playbook -i inventory playbook.yaml
                         '''
                     }
                 }
