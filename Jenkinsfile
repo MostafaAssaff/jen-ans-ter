@@ -14,7 +14,7 @@ pipeline {
 
         stage('Check Terraform files') {
             steps {
-                dir('terraform') {
+                dir('Terraform') {
                     sh 'ls -al'
                 }
             }
@@ -22,7 +22,7 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                dir('terraform') {
+                dir('Terraform') {
                     withCredentials([usernamePassword(credentialsId: 'aws-cred',
                         usernameVariable: 'AWS_ACCESS_KEY_ID',
                         passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
@@ -38,7 +38,7 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                dir('terraform') {
+                dir('Terraform') {
                     withCredentials([usernamePassword(credentialsId: 'aws-cred',
                         usernameVariable: 'AWS_ACCESS_KEY_ID',
                         passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
@@ -54,7 +54,7 @@ pipeline {
 
         stage('Run Ansible') {
             steps {
-                dir('ansible') {
+                dir('Ansible') {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-key',
                         keyFileVariable: 'SSH_KEY',
                         usernameVariable: 'SSH_USER')]) {
