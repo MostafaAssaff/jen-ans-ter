@@ -6,6 +6,20 @@ pipeline {
     }
 
     stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Check Terraform files') {
+            steps {
+                dir('terraform') {
+                    sh 'ls -al'
+                }
+            }
+        }
+
         stage('Terraform Init') {
             steps {
                 dir('terraform') {
@@ -45,13 +59,8 @@ pipeline {
                         keyFileVariable: 'SSH_KEY',
                         usernameVariable: 'SSH_USER')]) {
                         sh '''
-                            # جلب ال IP من Terraform output
                             EC2_IP=$(terraform -chdir=../terraform output -raw public_ip)
-
-                            # إنشاء ملف inventory ديناميكي
                             echo "$EC2_IP ansible_user=$SSH_USER ansible_ssh_private_key_file=$SSH_KEY" > inventory
-
-                            # تشغيل الـ playbook باستخدام الـ inventory
                             ansible-playbook -i inventory playbook.yml
                         '''
                     }
